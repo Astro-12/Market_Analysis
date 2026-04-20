@@ -1,12 +1,27 @@
 import os
 import pandas as pd
 from sqlalchemy import create_engine, text
+import mysql.connector
+import dotenv
+from urllib.parse import quote_plus
+from dotenv import load_dotenv
+from pathlib import Path
 
-# --- STEP 1: MANUALLY SET YOUR PASSWORD HERE ---
-db_pass = "Luciferisdevil15!&"  
+load_dotenv(dotenv_path=Path(__file__).parent / ".env")\
+
+db_pass = quote_plus(os.getenv("DB_PASSWORD"))
+
+db_pass = os.getenv("DB_PASSWORD")
+
+if db_pass is None:
+    raise ValueError("DB_PASSWORD not found in .env file!")
+
+#db_pass = "Luciferisdevil15!&"   
+print(f"DEBUG password: '{db_pass}'")
 
 # --- STEP 2: CONNECT TO THE SERVER ---
 # We use 'localhost' and 'root' which are standard for local MySQL
+db_pass_encoded = quote_plus(db_pass)
 BASE_URL = f"mysql+mysqlconnector://root:{db_pass}@localhost"
 base_engine = create_engine(BASE_URL)
 
@@ -56,3 +71,4 @@ def store_to_db(df: pd.DataFrame, db_engine):
         index=True
     )
     print(f"Data for {df['ticker'].iloc[0]} stored successfully.")
+
