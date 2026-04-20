@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 Fetching data---- yfinance,
 indicators.py---- coverting raw data to calculate sma,ema,volatility and rsi
 storing the charts using mysql and sqlalchemy
+=======
+Fetching data---- yfinance,
+indicators.py---- coverting raw data to calculate sma,ema,volatility and rsi
+storing the charts using mysql and sqlalchemy
+>>>>>>> d5c34c3 (Fixed merge conflict)
 using matplotlib to generate triple panel charts showing price,volume and momentum

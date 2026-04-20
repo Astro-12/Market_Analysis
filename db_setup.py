@@ -50,9 +50,8 @@ with engine.connect() as conn:
             low         FLOAT,
             close       FLOAT,
             volume      BIGINT,
-            sma         FLOAT,  -- Generic name for dynamic periods
-            ema         FLOAT,  -- Generic name for dynamic periods
-            rsi         FLOAT,  -- Essential for your new scanner
+            sma_20      FLOAT,
+            ema_20      FLOAT,
             volatility  FLOAT,
             UNIQUE KEY unique_ticker_date (ticker, date)
         )
@@ -62,15 +61,14 @@ with engine.connect() as conn:
 def store_to_db(df: pd.DataFrame, db_engine):
     """Saves data to the MySQL table."""
     # Only keep the columns that match our SQL table
-    cols = ["ticker", "open", "high", "low", "close", "volume", "sma", "ema", "rsi", "volatility"]
+    cols = ["ticker", "open", "high", "low", "close", "volume", "sma_20", "ema_20", "volatility"]
     df_to_save = df[cols].copy()
     df_to_save.index.name = "date"
     
     df_to_save.to_sql(
         "stock_prices",
         con=db_engine,
-        if_exists="append",
+        if_exists="replace",
         index=True
     )
     print(f"Data for {df['ticker'].iloc[0]} stored successfully.")
-
