@@ -1,0 +1,4 @@
+Fetching data---- yfinance,
+indicators.py---- coverting raw data to calculate sma,ema,volatility and rsi
+storing the charts using mysql and sqlalchemy
+using matplotlib to generate triple panel charts showing price,volume and momentum

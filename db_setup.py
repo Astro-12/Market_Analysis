@@ -39,6 +39,7 @@ except Exception as e:
 engine = create_engine(f"{BASE_URL}/stock_db")
 
 with engine.connect() as conn:
+    # In db_setup.py, update the CREATE TABLE section:
     conn.execute(text("""
         CREATE TABLE IF NOT EXISTS stock_prices (
             id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,8 +50,9 @@ with engine.connect() as conn:
             low         FLOAT,
             close       FLOAT,
             volume      BIGINT,
-            sma_20      FLOAT,
-            ema_20      FLOAT,
+            sma         FLOAT,  -- Generic name for dynamic periods
+            ema         FLOAT,  -- Generic name for dynamic periods
+            rsi         FLOAT,  -- Essential for your new scanner
             volatility  FLOAT,
             UNIQUE KEY unique_ticker_date (ticker, date)
         )
@@ -60,7 +62,7 @@ with engine.connect() as conn:
 def store_to_db(df: pd.DataFrame, db_engine):
     """Saves data to the MySQL table."""
     # Only keep the columns that match our SQL table
-    cols = ["ticker", "open", "high", "low", "close", "volume", "sma_20", "ema_20", "volatility"]
+    cols = ["ticker", "open", "high", "low", "close", "volume", "sma", "ema", "rsi", "volatility"]
     df_to_save = df[cols].copy()
     df_to_save.index.name = "date"
     

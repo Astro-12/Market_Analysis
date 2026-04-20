@@ -1,23 +1,18 @@
 import pandas as pd
 
-def add_indicators(df: pd.DataFrame):
-    """
-    Calculates technical indicators and adds them as new columns.
-    """
-    # 1. Simple Moving Average (SMA)
-    df['sma_20'] = df['close'].rolling(window=20).mean()
+def add_indicators(df, sma_period=20, ema_period=20, rsi_period=14):
+    # Use generic names for database compatibility
+    df['sma'] = df['close'].rolling(window=sma_period).mean()
+    df['ema'] = df['close'].ewm(span=ema_period, adjust=False).mean()
+    df['volatility'] = df['close'].pct_change().rolling(window=sma_period).std()
     
-    # 2. Exponential Moving Average (EMA)
-    df['ema_20'] = df['close'].ewm(span=20, adjust=False).mean()
-    
-    # 3. Volatility (Standard Deviation of returns)
-    df['volatility'] = df['close'].pct_change().rolling(window=20).std()
-    
-    # 4. Relative Strength Index (RSI)
+    # RSI Calculation with a Zero-Division Safety Net
     delta = df['close'].diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-    rs = gain / loss
+    gain = (delta.where(delta > 0, 0)).rolling(window=rsi_period).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=rsi_period).mean()
+    
+    # Replace 0 with a tiny number to prevent NaN errors in your DB
+    rs = gain / loss.replace(0, 0.001) 
     df['rsi'] = 100 - (100 / (1 + rs))
     
     return df.dropna()

@@ -10,7 +10,7 @@ try:
         print(f"Processing {ticker}...")
         # 1. Fetch raw data
         df = fetch_and_clean(ticker, period="1y") 
-        # 2. CALCULATE indicators (This adds sma_20, ema_20, etc.)
+        # 2. CALCULATE indicators (This adds sma, ema, etc.)
         df = add_indicators(df) 
         # 3. Store the PROCESSED data to the database
         store_to_db(df, engine) 
