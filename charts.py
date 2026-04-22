@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-import pandas as pd
+import streamlit as st
 
 def plot_analysis(df, ticker):
     """
     Generates a technical analysis chart for the given ticker.
     """
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 9), sharex=True)
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 12), sharex=True)
     fig.suptitle(f"{ticker} - Technical Analysis")
 
     # 1. Price + Moving Averages
@@ -30,4 +30,5 @@ def plot_analysis(df, ticker):
         ax3.set_ylim(0, 100)
     
     plt.tight_layout()
-    plt.show()
+    
+    st.pyplot(fig)#type: ignore

@@ -7,17 +7,14 @@ from urllib.parse import quote_plus
 from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv(dotenv_path=Path(__file__).parent / ".env")\
-
-db_pass = quote_plus(os.getenv("DB_PASSWORD"))
+env_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=env_path)
 
 db_pass = os.getenv("DB_PASSWORD")
 
 if db_pass is None:
     raise ValueError("DB_PASSWORD not found in .env file!")
 
-#db_pass = "Luciferisdevil15!&"   
-print(f"DEBUG password: '{db_pass}'")
 
 # --- STEP 2: CONNECT TO THE SERVER ---
 # We use 'localhost' and 'root' which are standard for local MySQL
@@ -50,8 +47,9 @@ with engine.connect() as conn:
             low         FLOAT,
             close       FLOAT,
             volume      BIGINT,
-            sma_20      FLOAT,
-            ema_20      FLOAT,
+            sma         FLOAT,
+            ema         FLOAT,
+            rsi         FLOAT,
             volatility  FLOAT,
             UNIQUE KEY unique_ticker_date (ticker, date)
         )
